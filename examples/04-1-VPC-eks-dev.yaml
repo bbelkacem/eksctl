@@ -1,0 +1,28 @@
+# An example of ClusterConfig object using an existing VPC:
+--- 
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: cluster-poc-bbo
+  region: eu-west-1
+
+vpc:
+  id: "vpc-043c39e5be99cea7f"  # VPC-eks-dev (optional, must match VPC ID used for each subnet below)
+  cidr: "10.29.6.128/25"       # (optional, must match CIDR used by the given VPC)
+  subnets:
+    # must provide 'private' and/or 'public' subnets by availibility zone as shown
+    private:
+      eu-west-1b:
+        id: "subnet-073b5c73eb8a8e636"
+        cidr: "10.29.6.160/27" # (optional, must match CIDR used by the given subnet)
+
+nodeGroups:
+  - name: ng-1-poc-bbo
+    instanceType: t3.medium
+    desiredCapacity: 1
+    privateNetworking: true # if only 'Private' subnets are given, this must be enabled
+    iam:
+      instanceProfileARN: "arn:aws:iam::594593191524:mfa/ext.bboukhalfa@cma-cgm.com"
+      #instanceRoleARN: "arn:aws:iam::934385800652:role/shared-services-test-FullAdmin" 
+      instanceRoleARN: "arn:aws:iam::934385800652:role/aws-service-role/eks.amazonaws.com/AWSServiceRoleForAmazonEKS"
